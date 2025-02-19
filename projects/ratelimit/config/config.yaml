@@ -1,0 +1,11 @@
+domain: rl
+descriptors:
+  - key: "x-user-id"
+    rate_limit:
+      unit: minute
+      requests_per_unit: 10
+
+
+
+
+

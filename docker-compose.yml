@@ -1,0 +1,110 @@
+version: "3"
+services:
+  redis:
+    image: redis:alpine
+    expose:
+      - 6379
+    ports:
+      - 6379:6379
+    networks:
+      - ratelimit-network
+
+  ratelimit:
+    image: envoyproxy/ratelimit:master
+    command: /bin/ratelimit
+    ports:
+      - 8080:8080
+      - 8081:8081
+      - 6070:6070
+    depends_on:
+      - redis
+    networks:
+      - ratelimit-network
+    volumes:
+      - ./projects/ratelimit/config:/data/ratelimit/config
+    environment:
+      - USE_STATSD=true
+      - STATSD_HOST=statsd
+      - STATSD_PORT=9125
+      - LOG_LEVEL=debug
+      - REDIS_SOCKET_TYPE=tcp
+      - REDIS_URL=redis:6379
+      - RUNTIME_ROOT=/data
+      - RUNTIME_SUBDIRECTORY=ratelimit
+      - RUNTIME_WATCH_ROOT=false
+      - CONFIG_TYPE=${CONFIG_TYPE:-FILE}
+      - CONFIG_GRPC_XDS_NODE_ID=test-node-id
+      - CONFIG_GRPC_XDS_SERVER_URL=ratelimit-xds-config-server:18000
+
+  ratelimit-xds-config-server:
+    image: ratelimit-xds-config-server:latest
+    build:
+      context: config/xds-sotw-config-server
+      dockerfile: Dockerfile
+    command: ["-nodeID", "test-node-id", "-port", "18000", "-debug", "true"]
+    expose:
+      - 18000
+    networks:
+      - ratelimit-network
+    profiles:
+      - xds-config
+
+  envoy-proxy:
+    image: envoyproxy/envoy:v1.29.2
+    entrypoint: "/usr/local/bin/envoy"
+    command:
+      - "--service-node proxy"
+      - "--service-cluster proxy"
+      - "--config-path /etc/envoy/proxy.yaml"
+      - "--concurrency 1"
+      - "--mode serve"
+      - "--log-level info"
+    volumes:
+      - ./projects/envoy/proxy.yaml:/etc/envoy/proxy.yaml
+    networks:
+      - ratelimit-network
+    expose:
+      - "8888"
+      - "8001"
+    ports:
+      - "8888:8888"
+      - "8001:8001"
+    depends_on:
+      - ratelimit
+      - app1
+      - app2
+
+  statsd:
+    image: prom/statsd-exporter:v0.18.0
+    entrypoint: /bin/statsd_exporter
+    command:
+      - "--statsd.mapping-config=/etc/statsd-exporter/conf.yaml"
+    expose:
+      - 9125
+      - 9102
+    ports:
+      - 9125:9125
+      - 9102:9102 # Visit http://localhost:9102/metrics to see metrics in Prometheus format
+    networks:
+      - ratelimit-network
+    volumes:
+      - ./projects/statsd-exporter/conf.yaml:/etc/statsd-exporter/conf.yaml
+
+  app1:
+    container_name: app1
+    build: ./projects/web-application
+    environment:
+      - PORT=9000
+    networks:
+      - ratelimit-network
+
+  app2:
+    container_name: app2
+    build: ./projects/web-application
+    environment:
+      - PORT=9001
+    networks:
+      - ratelimit-network
+
+networks:
+  ratelimit-network:
