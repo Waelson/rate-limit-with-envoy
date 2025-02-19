@@ -21,7 +21,7 @@ services:
     networks:
       - ratelimit-network
     volumes:
-      - ./projects/ratelimit/config:/data/ratelimit/config
+      - ./projects/config/ratelimit:/data/ratelimit/config
     environment:
       - USE_STATSD=true
       - STATSD_HOST=statsd
@@ -60,7 +60,7 @@ services:
       - "--mode serve"
       - "--log-level info"
     volumes:
-      - ./projects/envoy/proxy.yaml:/etc/envoy/proxy.yaml
+      - ./projects/config/envoy/proxy.yaml:/etc/envoy/proxy.yaml
     networks:
       - ratelimit-network
     expose:
@@ -71,8 +71,7 @@ services:
       - "8001:8001"
     depends_on:
       - ratelimit
-      - app1
-      - app2
+      - app
 
   statsd:
     image: prom/statsd-exporter:v0.18.0
@@ -88,21 +87,14 @@ services:
     networks:
       - ratelimit-network
     volumes:
-      - ./projects/statsd-exporter/conf.yaml:/etc/statsd-exporter/conf.yaml
+      - ./projects/config/statsd-exporter/conf.yaml:/etc/statsd-exporter/conf.yaml
 
-  app1:
-    container_name: app1
-    build: ./projects/web-application
+  app:
+    build: projects/application
+    deploy:
+        replicas: 3
     environment:
       - PORT=9000
-    networks:
-      - ratelimit-network
-
-  app2:
-    container_name: app2
-    build: ./projects/web-application
-    environment:
-      - PORT=9001
     networks:
       - ratelimit-network
 

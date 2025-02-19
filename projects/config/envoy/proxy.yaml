@@ -21,24 +21,19 @@ static_resources:
                     socket_address:
                       address: ratelimit
                       port_value: 8081
-    - name: mock
+    - name: application
       connect_timeout: 1s
       type: STRICT_DNS
       lb_policy: ROUND_ROBIN
       load_assignment:
-        cluster_name: mock
+        cluster_name: application
         endpoints:
           - lb_endpoints:
               - endpoint:
                   address:
                     socket_address:
-                      address: app1
+                      address: app
                       port_value: 9000
-              - endpoint:
-                  address:
-                    socket_address:
-                      address: app2
-                      port_value: 9001
   listeners:
     - address:
         socket_address:
@@ -72,14 +67,14 @@ static_resources:
                 route_config:
                   name: route
                   virtual_hosts:
-                    - name: mock
+                    - name: application
                       domains:
                         - "*"
                       routes:
                         - match:
                             prefix: "/"
                           route:
-                            cluster: mock
+                            cluster: application
                             rate_limits:
                               - actions:
                                   - request_headers:
