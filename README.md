@@ -71,6 +71,19 @@ Para limitar o Rate Limit por API Key, edite o arquivo `projects/config/ratelimi
           requests_per_unit: 400
   ...
 ```
+Agora, no arquivo `projects/config/envoy/proxy.yaml` descomente o trecho de código abaixo e depois reinicie o docker-compose:
+
+```yaml
+  ...
+  route:
+    cluster: application
+    rate_limits:
+      - actions:
+        - request_headers:
+            header_name: "x-api-key"
+            descriptor_key: "x-api-key"
+  ...
+```
 
 ## FAQ
 ### O que é Envoy?
