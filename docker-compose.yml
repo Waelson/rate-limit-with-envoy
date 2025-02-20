@@ -18,6 +18,7 @@ services:
       - 6070:6070
     depends_on:
       - redis
+      - statsd
     networks:
       - ratelimit-network
     volumes:
@@ -38,9 +39,6 @@ services:
 
   ratelimit-xds-config-server:
     image: ratelimit-xds-config-server:latest
-    build:
-      context: config/xds-sotw-config-server
-      dockerfile: Dockerfile
     command: ["-nodeID", "test-node-id", "-port", "18000", "-debug", "true"]
     expose:
       - 18000
@@ -88,6 +86,30 @@ services:
       - ratelimit-network
     volumes:
       - ./projects/config/statsd-exporter/conf.yaml:/etc/statsd-exporter/conf.yaml
+
+  prometheus:
+    image: prom/prometheus:v2.37.0
+    volumes:
+      - ./projects/config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - "9090:9090"
+    networks:
+      - ratelimit-network
+    depends_on:
+      - statsd
+
+  grafana:
+    image: grafana/grafana:9.3.6
+    ports:
+      - "3000:3000"
+    networks:
+      - ratelimit-network
+    volumes:
+      - ./projects/config/grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
 
   app:
     build: projects/application
