@@ -38,3 +38,21 @@ chmod +x test_rate_limit.sh
 ```
 
 O script `test_rate_limit.sh` envia 1000 requisições para o Envoy. As primeiras 5 requisições são permitidas, enquanto as 5 últimas são bloqueadas com erro `HTTP 429 Too Many Requests`.
+
+
+## FAQ
+### O que é Envoy?
+Envoy é um proxy de borda de alto desempenho e código aberto, projetado para aplicações modernas de microsserviços. Ele foi projetado para ser distribuído, resiliente, inteligente e altamente configurável.
+
+### O que é Rate Limit?
+Rate Limit é uma funcionalidade que permite limitar a quantidade de requisições que um serviço pode receber em um determinado período de tempo. O rate limit pode ser aplicado em diferentes níveis, como por exemplo, por serviço, por usuário, por IP, etc.
+
+### Por que usar Rate Limit?
+O Rate Limit é uma técnica importante para proteger serviços de abusos e ataques de negação de serviço (DDoS). Ele também pode ser utilizado para garantir a qualidade de serviço (QoS) e evitar que um único usuário ou serviço monopolize os recursos disponíveis.
+
+### Como o Rate Limit funciona?
+O Rate Limit funciona verificando se uma requisição excede o limite permitido. Se o limite for excedido, o Rate Limit retorna um erro `HTTP 429 Too Many Requests`. Caso contrário, a requisição é encaminhada para o serviço de destino.
+
+### Como o Rate Limit é implementado?
+O Rate Limit é implementado utilizando um proxy como Envoy. O Envoy intercepta as requisições antes de encaminhá-las para a aplicação. Ele verifica se a requisição excede os limites definidos e, se necessário, bloqueia a requisição.
+
