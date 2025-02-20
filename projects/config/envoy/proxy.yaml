@@ -77,6 +77,10 @@ static_resources:
                             cluster: application
                             rate_limits:
                               - actions:
+# Descomente se quiser controlar por chave de API
+#                                  - request_headers:
+#                                      header_name: "x-api-key"
+#                                      descriptor_key: "x-api-key"
                                   - request_headers:
-                                      header_name: "x-user-id"
-                                      descriptor_key: "x-user-id"
+                                      header_name: ":path"
+                                      descriptor_key: "path"

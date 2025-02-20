@@ -1,9 +1,20 @@
 domain: rl
 descriptors:
-  - key: "x-user-id"
+# Descomente se quiser controlar por chave de API
+#  - key: "x-api-key"
+#    descriptors:
+#      - key: path
+#        value: /
+#        rate_limit:
+#          unit: minute
+#          requests_per_unit: 400
+
+
+  - key: path
+    value: /
     rate_limit:
       unit: minute
-      requests_per_unit: 50
+      requests_per_unit: 3000
 
 
 
