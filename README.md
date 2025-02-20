@@ -45,6 +45,8 @@ Acesse o Grafana em `http://localhost:3000` e faça login com as credenciais pad
 
 
 ## Ajustando o Rate Limit
+
+### Rate Limit Global
 Para ajustar o Rate Limit, edite o arquivo `projects/config/ratelimite/config.yaml` e altere os valores de `unit` e `requests_per_unit`  conforme necessário. Por exemplo, para limitar a 500 requisições por minuto, utilize o seguinte trecho de código:
 
 ```yaml
@@ -53,6 +55,21 @@ Para ajustar o Rate Limit, edite o arquivo `projects/config/ratelimite/config.ya
     rate_limit:
       unit: minute
       requests_per_unit: 500
+```
+
+### Rate Limit por API Key
+Para limitar o Rate Limit por API Key, edite o arquivo `projects/config/ratelimite/config.yaml` e descomente o trecho de código abaixo.:
+
+```yaml
+  ...
+  - key: "x-api-key"
+    descriptors:
+      - key: path
+        value: /
+        rate_limit:
+          unit: minute
+          requests_per_unit: 400
+  ...
 ```
 
 ## FAQ
