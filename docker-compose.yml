@@ -108,6 +108,7 @@ services:
       - ratelimit-network
     volumes:
       - ./projects/config/grafana/provisioning:/etc/grafana/provisioning
+      - ./projects/config/grafana/dashboards:/var/lib/grafana/dashboards
     depends_on:
       - prometheus
 

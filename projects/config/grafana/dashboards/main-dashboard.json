@@ -24,7 +24,6 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -134,12 +133,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "dark-red",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": ""
               }
             ]
           }
@@ -393,6 +388,6 @@
   "timezone": "",
   "title": "Rate Limit - Dashboard",
   "uid": "p1tbIBcNz",
-  "version": 19,
+  "version": 1,
   "weekStart": ""
 }
