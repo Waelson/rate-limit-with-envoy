@@ -37,7 +37,8 @@ chmod +x test_rate_limit.sh
 ./test_rate_limit.sh
 ```
 
-O script `test_rate_limit.sh` envia 1000 requisições para o Envoy. As primeiras 5 requisições são permitidas, enquanto as 5 últimas são bloqueadas com erro `HTTP 429 Too Many Requests`.
+O script `test_rate_limit.sh` envia 20000 requisições para o Envoy. As primeiras 500 requisições a cada minuto são permitidas, enquanto as 5 últimas são bloqueadas com erro `HTTP 429 Too Many Requests`.
+![Architecture](documentation/script.png)
 
 
 ## FAQ
