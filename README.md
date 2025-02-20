@@ -26,10 +26,7 @@ Acesse o diretório raiz da solução e execute o seguinte comando para construi
 $ docker-compose up --build
 ```
 
-### Passo 2: Criar o dashboard no Grafana
-Acesse o Grafana em `http://localhost:3000` e faça login com as credenciais padrão `admin:admin`. Em seguida, adicione o Prometheus como fonte de dados e importe o dashboard localizado em `grafana/dashboard.json`.
-
-### Passo 3: Testar o Rate Limit
+### Passo 2: Testar o Rate Limit
 Execute o seguinte comando para testar o Rate Limit:
 
 ```bash
@@ -38,7 +35,13 @@ chmod +x test_rate_limit.sh
 ```
 
 O script `test_rate_limit.sh` envia 20000 requisições para o Envoy. As primeiras 500 requisições a cada minuto são permitidas, enquanto as 5 últimas são bloqueadas com erro `HTTP 429 Too Many Requests`.
+
 ![Architecture](documentation/script.png)
+
+### Passo 3: Criar o dashboard no Grafana
+Acesse o Grafana em `http://localhost:3000` e faça login com as credenciais padrão `admin:admin`. Em seguida, busque pelo dashboard `Rate Limit Dashboard`. Aguarde alguns instantes e as métricas serão exibidas.
+
+![Architecture](documentation/dashboard.png)
 
 
 ## FAQ
