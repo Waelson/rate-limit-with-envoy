@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TOTAL_REQUESTS=200
+TOTAL_REQUESTS=1000
 ENDPOINT="http://localhost:8888"
 HEADER="x-user-id: 12345"
 

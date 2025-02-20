@@ -1,4 +1,4 @@
-# Rate Limit com Envoy
+# Rate Limit com Envoy Proxy
 ## Introdução
 Essa solução demonstra a utilização de rate limit com Envoy. O rate limit é uma funcionalidade que permite limitar a quantidade de requisições que um serviço pode receber em um determinado período de tempo. O rate limit pode ser aplicado em diferentes níveis, como por exemplo, por serviço, por usuário, por IP, etc.
 
@@ -17,3 +17,24 @@ Essa solução demonstra a utilização de rate limit com Envoy. O rate limit é
 | **Target Application Cluster** | Conjunto de instâncias da aplicação de destino. Se a requisição estiver dentro do limite, o Envoy Proxy a encaminha para uma dessas instâncias.                                             |
 
 ## Configurando e Inicializando a Solução
+Siga os passos abaixo para inicializar e configurar a solução de Rate Limit:
+
+### Passo 1: Subir os Contêineres com Docker Compose
+Acesse o diretório raiz da solução e execute o seguinte comando para construir e iniciar todos os contêineres:
+
+```bash
+$ docker-compose up --build
+```
+
+### Passo 2: Criar o dashboard no Grafana
+Acesse o Grafana em `http://localhost:3000` e faça login com as credenciais padrão `admin:admin`. Em seguida, adicione o Prometheus como fonte de dados e importe o dashboard localizado em `grafana/dashboard.json`.
+
+### Passo 3: Testar o Rate Limit
+Execute o seguinte comando para testar o Rate Limit:
+
+```bash
+chmod +x test_rate_limit.sh
+./test_rate_limit.sh
+```
+
+O script `test_rate_limit.sh` envia 1000 requisições para o Envoy. As primeiras 5 requisições são permitidas, enquanto as 5 últimas são bloqueadas com erro `HTTP 429 Too Many Requests`.
