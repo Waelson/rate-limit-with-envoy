@@ -39,10 +39,21 @@ O script `test_rate_limit.sh` envia 20000 requisições para o Envoy. As primeir
 ![Architecture](documentation/script.png)
 
 ### Passo 3: Criar o dashboard no Grafana
-Acesse o Grafana em `http://localhost:3000` e faça login com as credenciais padrão `admin:admin`. Em seguida, busque pelo dashboard `Rate Limit Dashboard`. Aguarde alguns instantes e as métricas serão exibidas.
+Acesse o Grafana em `http://localhost:3000` e faça login com as credenciais padrão `admin:admin`. Em seguida, busque pelo dashboard `Rate Limit Dashboard` (sim, ele já está configurado). Aguarde alguns instantes e as métricas serão exibidas.
 
 ![Architecture](documentation/dashboard.png)
 
+
+## Ajustando o Rate Limit
+Para ajustar o Rate Limit, edite o arquivo `projects/config/ratelimite/config.yaml` e altere os valores de `unit` e `requests_per_unit`  conforme necessário. Por exemplo, para limitar a 500 requisições por minuto, utilize o seguinte trecho de código:
+
+```yaml
+  - key: path
+    value: /
+    rate_limit:
+      unit: minute
+      requests_per_unit: 500
+```
 
 ## FAQ
 ### O que é Envoy?
