@@ -34,7 +34,7 @@ chmod +x test_rate_limit.sh
 ./test_rate_limit.sh
 ```
 
-O script `test_rate_limit.sh` envia 20000 requisições para o Envoy. As primeiras 500 requisições a cada minuto são permitidas, enquanto o restante são bloqueadas com erro `HTTP 429 Too Many Requests`.
+O script `test_rate_limit.sh` envia 20000 requisições para o Envoy. As primeiras 20 requisições a cada segundo são permitidas, enquanto o restante são bloqueadas com erro `HTTP 429 Too Many Requests`.
 
 ![Architecture](documentation/script.png)
 
@@ -53,8 +53,8 @@ Para ajustar o Rate Limit, edite o arquivo `projects/config/ratelimite/config.ya
   - key: path
     value: /
     rate_limit:
-      unit: minute
-      requests_per_unit: 500
+      unit: second
+      requests_per_unit: 20
 ```
 
 ### Rate Limit por API Key
