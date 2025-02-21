@@ -46,10 +46,11 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "<center><h1>Global Rate Limit</h1></center> ",
+        "content": "<center><h1>Global Rate Limit</h1></center> <br/><center>Dashboard de Demonstração</center>",
         "mode": "html"
       },
       "pluginVersion": "9.3.6",
+      "transparent": true,
       "type": "text"
     },
     {
@@ -75,7 +76,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "reqs"
         },
         "overrides": []
       },
@@ -109,13 +111,25 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(increase(ratelimit_service_rate_limit_within_limit[$__rate_interval]))",
+          "expr": "round(sum(increase(ratelimit_service_rate_limit_within_limit[$__interval]))) or vector(0)",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Total - Requisições Processadas",
+      "title": "Total - Requisições Dentro do Limite",
+      "transformations": [
+        {
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "mode": "reduceFields",
+            "reducers": [
+              "sum"
+            ]
+          }
+        }
+      ],
       "type": "stat"
     },
     {
@@ -137,7 +151,8 @@
                 "value": null
               }
             ]
-          }
+          },
+          "unit": "reqs"
         },
         "overrides": []
       },
@@ -170,13 +185,23 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(increase(ratelimit_service_rate_limit_over_limit[$__rate_interval]))",
+          "expr": "round(sum(increase(ratelimit_service_rate_limit_over_limit[$__interval]))) or vector(0)",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
       "title": "Total - Requisições Excedidas",
+      "transformations": [
+        {
+          "id": "reduce",
+          "options": {
+            "reducers": [
+              "sum"
+            ]
+          }
+        }
+      ],
       "type": "stat"
     },
     {
@@ -210,7 +235,7 @@
               "fill": "solid"
             },
             "lineWidth": 2,
-            "pointSize": 1,
+            "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
@@ -267,13 +292,14 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(increase(ratelimit_service_rate_limit_within_limit[30s]))",
+          "expr": "sum(increase(ratelimit_service_rate_limit_within_limit[1m])) by (__interval) or vector(0)",
+          "interval": "1m",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Requisições Processadas",
+      "title": "Requisições Dentro do Limite",
       "transparent": true,
       "type": "timeseries"
     },
@@ -294,7 +320,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "barAlignment": 0,
+            "barAlignment": -1,
             "drawStyle": "line",
             "fillOpacity": 100,
             "gradientMode": "opacity",
@@ -362,7 +388,8 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(increase(ratelimit_service_rate_limit_over_limit[30s]))",
+          "expr": "sum(increase(ratelimit_service_rate_limit_over_limit[1m])) by (__interval) or vector(0)",
+          "interval": "1m",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"

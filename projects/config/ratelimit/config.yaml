@@ -13,8 +13,8 @@ descriptors:
   - key: path
     value: /
     rate_limit:
-      unit: minute
-      requests_per_unit: 500
+      unit: second
+      requests_per_unit: 20
 
 
 
